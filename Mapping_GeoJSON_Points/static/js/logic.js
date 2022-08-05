@@ -35,19 +35,27 @@ let sanFranAirport ={
     }
 ]};
 
-//Grabbing our GeoJSON data.
-L.geoJSON(sanFranAirport,{
-    pointToLayer: function(feature, latlng){
-        console.log(feature);
-        return L.marker(latlng)
-        .bindPopup("<h2>" + feature.properties.city + "</h2>");
+//Grabbing our GeoJSON data. - use the pointToLayer: function
+// L.geoJSON(sanFranAirport,{
+//     pointToLayer: function(feature, latlng){
+//         console.log(feature);
+//         return L.marker(latlng)
+//         .bindPopup("<h2>" + feature.properties.name + "</h2>"+"<hr>" + "<p>" + feature.properties.city + ", " + feature.properties.country + "</p>");
+//     }
+// }).addTo(map);
+
+// Grabbing our GeoJSON data. - use the onEachFeature: function
+L.geoJSON(sanFranAirport, {
+    onEachFeature: function(feature, layer) {
+        console.log(layer);
+        layer.bindPopup("<h2>" + feature.properties.name + "</h2>"+"<hr>" + "<p>" + feature.properties.city + ", " + feature.properties.country + "</p>");
     }
 }).addTo(map);
 
 
 // We create the tile layer that will be the background of our map.
 
-let streets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+let streets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/navigation-night-v1/tiles/{z}/{x}/{y}?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18,
     accessToken: API_KEY
