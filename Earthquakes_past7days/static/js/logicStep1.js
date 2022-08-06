@@ -3,7 +3,6 @@
 console.log("working")
 
 
-
 // We create the tile layer that will be the background of our map.
 let streets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -19,43 +18,38 @@ let satelliteStreets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/sate
 });
 
 // Create a base layer that hold both maps.
-
 let baseMaps = {
     "Streets": streets,
     "Satellite Streets": satelliteStreets
 };
 // Create a map object with a center and zoom level
 
-// let map = L.map('mapid').setView([40.7, -94.5], 4);
-
 let map = L.map("mapid", {
     center:[
-        43.7,-79.3
+        39.5, -98.5
     ],
-    zoom: 11,
+    zoom: 3,
     layers: [streets]
 });
 
 // Pass our map layers into our layers control and add the layers control to the map.
 L.control.layers(baseMaps).addTo(map);
 
-// Accessing the airport GeoJSON URL
-let torontoHoods = "https://raw.githubusercontent.com/ClaudAMC/Mapping_Earthquakes/main/torontoNeighborhoods.json";
-
-
 // Grabbing our GeoJSON data.
-d3.json(torontoHoods).then(function(data) {
+d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson").then(function(data) {
     console.log(data);
   // Creating a GeoJSON layer with the retrieved data.
-    L.geoJSON(data,{
-        style: myStyle,
-        onEachFeature: function(features, layer){
-            layer.bindPopup("<h2>" + "Neighboorhood: " + features.properties.AREA_NAME + "</h2>")
-        }
-    }).addTo(map)
+    L.geoJSON(data
+        //,{
+        // style: myStyle,
+        // onEachFeature: function(features, layer){
+        //     layer.bindPopup("<h2>" + "Neighboorhood: " + features.properties.AREA_NAME + "</h2>")
+        // }
+    //}
+    ).addTo(map)
 });
 
-let myStyle = {
-    fillColor: "yellow",
-    weight: 1
-}
+// let myStyle = {
+//     fillColor: "yellow",
+//     weight: 1
+// }
