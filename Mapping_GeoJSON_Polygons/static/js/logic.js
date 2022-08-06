@@ -33,7 +33,7 @@ let map = L.map("mapid", {
         43.7,-79.3
     ],
     zoom: 11,
-    layers: [satelliteStreets]
+    layers: [streets]
 });
 
 // Pass our map layers into our layers control and add the layers control to the map.
@@ -47,5 +47,15 @@ let torontoHoods = "https://raw.githubusercontent.com/ClaudAMC/Mapping_Earthquak
 d3.json(torontoHoods).then(function(data) {
     console.log(data);
   // Creating a GeoJSON layer with the retrieved data.
-    L.geoJSON(data).addTo(map)
+    L.geoJSON(data,{
+        style: myStyle,
+        onEachFeature: function(features, layer){
+            layer.bindPopup("<h2>" + "Neighboorhood: " + features.properties.AREA_NAME + "</h2>")
+        }
+    }).addTo(map)
 });
+
+let myStyle = {
+    fillColor: "yellow",
+    weight: 1
+}
