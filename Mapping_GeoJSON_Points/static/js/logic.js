@@ -2,6 +2,28 @@
 
 console.log("working")
 
+
+
+// We create the tile layer that will be the background of our map.
+let streets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    accessToken: API_KEY
+});
+
+// We create the dark view tile layer that will be an option for our map.
+let dark = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/dark-v10/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+    attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    accessToken: API_KEY
+});
+
+// Create a base layer that hold both maps.
+
+let baseMaps = {
+    Street: streets,
+    Dark: dark
+};
 // Create a map object with a center and zoom level
 
 // let map = L.map('mapid').setView([40.7, -94.5], 4);
@@ -10,19 +32,12 @@ let map = L.map("mapid", {
     center:[
         30, 30
     ],
-    zoom: 2
+    zoom: 2,
+    layers: [streets]
 });
 
-// We create the tile layer that will be the background of our map.
-
-let streets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/navigation-night-v1/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    maxZoom: 18,
-    accessToken: API_KEY
-});
-
-// Then we add our 'graymap' tile layer to the map.
-streets.addTo(map);
+// Pass our map layers into our layers control and add the layers control to the map.
+L.control.layers(baseMaps).addTo(map);
 
 // Accessing the airport GeoJSON URL
 let airportData = "https://raw.githubusercontent.com/ClaudAMC/Mapping_Earthquakes/Mapping_GeoJSON_Points/majorAirports.json";
@@ -35,10 +50,11 @@ d3.json(airportData).then(function(data) {
     L.geoJSON(data, {
     onEachFeature: function (feature, layer) {
         console.log(layer);
-        layer.bindPopup("<h2>" + feature.properties.faa + "</h2>");
+        layer.bindPopup("<h4>" + "Airport code: " + feature.properties.faa + "</h4>"+"<hr>"+ "<p>" + "Airport Name: " + feature.properties.name + "</p>");
     }
   }).addTo(map)
 });
+
 
 
 
