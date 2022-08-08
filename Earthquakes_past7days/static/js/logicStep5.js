@@ -49,14 +49,15 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
     console.log(data);
   // Creating a GeoJSON layer with the retrieved data.
     L.geoJSON(data,{
-        style: styleInfo,
 
         // Turn each feature to a circleMarker on the map.
-
-        pointToLayer: function(feature, latlng) {
-            console.log(data);
-            return L.circleMarker(latlng)
+        pointToLayer: function (feature, latlng) {
+                    console.log(data);
+                    return L.circleMarker(latlng)
         },
+        
+        style: styleInfo,
+        
         // We create a popup for each circleMarker to display the mag and location of the earth quake after the marker has been created and styled.
         onEachFeature: function(feature, layer){
             layer.bindPopup("<h2>" + "Magnitude: " + feature.properties.mag + "</h2>" + "<hr>" + "Location: " + feature.properties.place);
@@ -64,35 +65,36 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
     }).addTo(earthquakes);
 
         // Then we add the earthquake layer to our map.
-        earthquakes.addTo(map);
-});
-
-// Create a legend control object.
-let legend = L.control({
-    position: "bottomright"
-});
-// Then add all the details for the legend.
-legend.onAdd = function() {
-    let div = L.DomUtil.create("div", "info legend");
-        const magnitudes = [0, 1, 2, 3, 4, 5];
-        const colors = [
-        "#98ee00",
-        "#d4ee00",
-        "#eecc00",
-        "#ee9c00",
-        "#ea822c",
-        "#ea2c2c"
-];
-    for (var i = 0; i < magnitudes.length; i++){
-        console.log(colors[i]);
-        div.innerHTML +=
-            "<i style='background: " + colors[i] + "'></i> " +
-            magnitudes[i] + (magnitudes[i + 1] ? "&ndash;" + magnitudes[i +1] + "<br>" : "+");
-    }
-    return div;
-}
+    earthquakes.addTo(map);
+    // Create a legend control object.
+    let legend = L.control({
+        position: "bottomright"
+    });
+    // Then add all the details for the legend.
+    legend.onAdd = function () {
+        let div = L.DomUtil.create('div', 'info legend');
+            const magnitudes = [0, 1, 2, 3, 4, 5];
+            const colors = [
+            "#98ee00",
+            "#d4ee00",
+            "#eecc00",
+            "#ee9c00",
+            "#ea822c",
+            "#ea2c2c"
+            ];
+        // Looping through our intervals to generate a label with a colored square for each interval.
+   for (var i = 0; i < magnitudes.length; i++) {
+    console.log(colors[i]);
+    div.innerHTML +=
+      "<i style='background: " + colors[i] + "'></i> " +
+      magnitudes[i] + (magnitudes[i + 1] ? "&ndash;" + magnitudes[i + 1] + "<br>" : "+");
+ }
+  return div;
+};
 
 legend.addTo(map);
+});
+
 
 
 // This function returns the style for each of the earthquakes we plot on
